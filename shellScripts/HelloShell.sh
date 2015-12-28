@@ -14,3 +14,10 @@ NUM_3=$NUM_1+$NUM_2
 readonly NUM_3 # Mark this variable as read only
 
 echo "Sum is: $NUM_3"
+
+# special varialbles
+echo "Process Name: $$"
+
+echo "File Name: $0"
+echo "Param1: $1"
+echo "Param2: $2"

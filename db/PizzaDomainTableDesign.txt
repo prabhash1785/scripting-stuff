@@ -1,0 +1,46 @@
+
+Pizza Store DB Modeling
+-----------------------
+
+pizza table:
+create table pizza
+(
+id int not null primary key,
+name varchar2(200)
+);
+
+
+topping table:
+create table topping
+(
+id int not null primary key,
+name varchar2(200),
+price int
+);
+
+pizza_topping table:
+create table pizza_topping
+(
+id int not null primary key,
+pizza_id int,
+topping_id int,
+foreign key (pizza_id) references pizza(id),
+foreign key (topping_id) references topping(id)
+);
+
+
+Queries on above tables:
+-------------------------
+// Get all pizzas with sausage as topping:
+Using sub-query:
+select * from pizza where id in (select pizza_id from pizza_topping where topping_id = (select id from topping where name = 'sausage'));
+
+Using joins:
+select pizza.name as pizza_name from pizza inner join pizza_topping on pizza.id = pizza_topping.pizza_id inner join topping on topping.id = pizza_topping.topping_id where topping.name = 'sausage';
+
+// Get pizza and all it's pizza topping details:
+select pizza.id, pizza.name as pizza_name, topping.id as topping_id, topping.name as topping_name, topping.price from pizza inner join pizza_topping on pizza.id = pizza_topping.pizza_id inner join topping on topping.id = pizza_topping.topping_id where pizza.name = "Cheese Pizza";
+
+// Find price of pizzas based on topping
+select pizza.name as pizza_name, sum(topping.price) as price from pizza inner join pizza_topping on pizza.id = pizza_topping.pizza_id inner join topping on topping.id = pizza_topping.id where pizza_id = 1;
+

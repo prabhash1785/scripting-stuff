@@ -1,0 +1,36 @@
+create table apartments
+(aptid int not null primary key,
+unitnumber varchar,
+buildingid int
+);
+
+create table requests
+(
+requestid int primary key,
+status varchar,
+aptid int,
+description varchar
+);
+
+insert into tenants (tenantid, tenantname) values (2, "Joe White");
+
+insert into apartments (aptid, unitnumber, buildingid) values (1, 24, 100);
+
+insert into apttenants (tenantid, aptid) values (2, 3);
+
+insert into buildings (buildingid, complexid, buildingname, address) values (300, 2, "Lovely Community", "San Jose");
+
+insert into requests (requestid, status, aptid, description) values (1, "Open", 9, "lease");
+
+
+// Print tenantid with more than one apartment
+select count(apttenants.aptid) as aptcount, tenantid from apttenants group by tenantid having aptcount > 1;
+
+// Print tenant details with apt more than 1:
+select * from tenants where tenantid in (select apttenants.tenantid from apttenants group by apttenants.tenantid having count(apttenants.aptid) > 1);
+
+// Get all buildings with open apartments requests
+select b.buildingid, b.complexid, b.buildingname, b.address, z.count from buildings b inner join (select apt.buildingid, apt.aptid, r.requestid, count(*) as count from requests r inner join apartments apt on r.aptid = apt.aptid group by apt.buildingid having r.status = "Open") z on b.buildingid = z.buildingid
+
+// Close all apartments requests for a specific building
+update requests set status = "Closed" where aptid in (select a.aptid from apartments a where a.buildingid = 300);

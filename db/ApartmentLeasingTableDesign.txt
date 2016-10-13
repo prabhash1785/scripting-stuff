@@ -1,9 +1,45 @@
+Apartment Lease Domain Table Design:
+------------------------------------
+
+apartments:
 create table apartments
-(aptid int not null primary key,
+(
+aptid int primary key,
 unitnumber varchar,
 buildingid int
 );
 
+buildings:
+create table buildings
+(
+buildingid int primary key,
+complexid int,
+buildingname varchar,
+address varchar
+);
+
+tenants:
+create table tenants
+(
+tenantid int primary key,
+tenantname varchar
+);
+
+complexes:
+create table complexes
+(
+complexid int primary key,
+complexname varchar
+);
+
+apttenants:
+create table apttenants
+(
+tenantid int,
+aptid int
+);
+
+requests:
 create table requests
 (
 requestid int primary key,
@@ -12,6 +48,7 @@ aptid int,
 description varchar
 );
 
+// Queries to add data:
 insert into tenants (tenantid, tenantname) values (2, "Joe White");
 
 insert into apartments (aptid, unitnumber, buildingid) values (1, 24, 100);
@@ -22,6 +59,8 @@ insert into buildings (buildingid, complexid, buildingname, address) values (300
 
 insert into requests (requestid, status, aptid, description) values (1, "Open", 9, "lease");
 
+
+// Complex queries to extract required resultset:
 
 // Print tenantid with more than one apartment
 select count(apttenants.aptid) as aptcount, tenantid from apttenants group by tenantid having aptcount > 1;

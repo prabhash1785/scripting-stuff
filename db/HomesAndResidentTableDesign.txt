@@ -1,0 +1,27 @@
+DB Table and Queries for Homes and People living in homes:
+-----------------------------------------------------------
+
+create table homes
+(
+id int primary key,
+hometype varchar,
+address varchar
+);
+
+create table people
+(
+id int primary key,
+sex char,
+homeid int,
+foreign key (homeid) references homes(id)
+);
+
+insert into homes (id, hometype, address) values (4, "Apartment", "Chicago");
+
+insert into people (id, sex, homeid) values (1, 'M', 1);
+
+// query to find home with more than 1 male in family
+select id as person_id, homeid as home_id, count(*) as male_count from people p where sex = 'M' group by p.homeid having male_count > 1;
+
+// Single query with join to find home with greater than 1 males.
+select h.id, h.address, h.hometype, count(*) as male_count from homes h inner join people p on h.id = p.homeid where p.sex = 'M' group by p.homeid having male_count > 2;
